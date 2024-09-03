@@ -97,9 +97,70 @@ const getCount = async(req,res) =>{
         res.status(500).json({ error: 'An error occurred while fetching project counters' });
       }
 }
+
+const departmentCodes = {
+  Strategy: "STR",
+  Finance: "FIN",
+  Quality: "QLT",
+  Maintenance: "MAN",
+  Store: "STO",
+  HR: "HR",
+};
+
+const getChartData = async(req,res) =>{
+  try {
+    // Aggregation to calculate total and closed projects by department
+    const data = await ProjectModel.aggregate([
+      {
+        $group: {
+          _id: '$department', // Group by department
+          totalProjects: { $sum: 1 }, // Count total projects
+          closedProjects: { 
+            $sum: { $cond: [{ $eq: ['$status', 'Close'] }, 1, 0] }, // Count closed projects
+          },
+        },
+      },
+    ]);
+
+    // Initialize response structure
+    const categories = [];
+    const totalData = [];
+    const closedData = [];
+
+    // Populate categories, totalData, and closedData based on department codes
+    for (const code of Object.keys(departmentCodes)) {
+      const dept = departmentCodes[code]; // e.g., "STR" for Strategy
+      const deptData = data.find(d => d._id === code) || { totalProjects: 0, closedProjects: 0 };
+
+      categories.push(dept); // Add department code to categories
+      totalData.push(deptData.totalProjects); // Add total project count
+      closedData.push(deptData.closedProjects); // Add closed project count
+    }
+
+    // Prepare final response format
+    const response = {
+      categories,
+      series: [
+        {
+          name: "Total",
+          data: totalData,
+        },
+        {
+          name: "Closed",
+          data: closedData,
+        },
+      ],
+    };
+
+    res.json(response);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching success data for chart', error });
+  }
+}
 module.exports = {
   addProject,
   getAllProjects,
   projectStatusChange,
-  getCount
+  getCount,
+  getChartData
 };

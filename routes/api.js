@@ -18,6 +18,7 @@ router.post("/projects/addProject",authenticateToken, projectController.addProje
 router.get("/projects/getAllProjects",authenticateToken, projectController.getAllProjects);
 router.put("/projectStatusChange/", projectController.projectStatusChange);
 router.get("/projects/getCount",authenticateToken, projectController.getCount);
+router.get("/projects/getChartData", projectController.getChartData);
 
 
 module.exports = router;
