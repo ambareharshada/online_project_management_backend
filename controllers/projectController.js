@@ -103,7 +103,7 @@ const departmentCodes = {
   Finance: "FIN",
   Quality: "QLT",
   Maintenance: "MAN",
-  Store: "STO",
+  Stores: "STO",
   HR: "HR",
 };
 
