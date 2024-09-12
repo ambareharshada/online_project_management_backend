@@ -6,11 +6,11 @@ const projectController = require("../controllers/projectController");
 
 //user routes
 router.post("/users/addUser/", userController.addUser);
-router.get(
-  "/users/getAllUsers/",
-  authenticateToken,
-  userController.getAllUsers
-);
+// router.get(
+//   "/users/getAllUsers/",
+//   authenticateToken,
+//   userController.getAllUsers
+// );
 router.post("/user/login/", userController.loginUser);
 
 //project routes

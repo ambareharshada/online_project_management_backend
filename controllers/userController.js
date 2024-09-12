@@ -20,15 +20,6 @@ const addUser = async (req, res) => {
   }
 };
 
-const getAllUsers = async (req, res) => {
-  try {
-    const users = await UserModel.find({}, { __v: 0 });
-    res.status(200).send(users);
-  } catch (error) {
-    res.status(500).send({ message: "Internal server error" });
-  }
-};
-
 const loginUser = async (req, res) => {
   const userData = req.body;
   try {
@@ -41,7 +32,7 @@ const loginUser = async (req, res) => {
         UserEmail.password
       );
       if (!password) {
-        res.status(500).send({Success:false, message: "Invalid User" });
+        res.status(500).send({ Success: false, message: "Invalid User" });
       } else {
         const token = jwt.sign(
           { id: UserEmail._id, email: UserEmail.email },
@@ -53,6 +44,8 @@ const loginUser = async (req, res) => {
           .send({ Success: true, message: "Valid User", token: token });
       }
     }
-  } catch (error) {}
+  } catch (error) {
+    res.status(500).send({ Success: false, message: "Invalid User" });
+  }
 };
-module.exports = { addUser, getAllUsers, loginUser };
+module.exports = { addUser, loginUser };

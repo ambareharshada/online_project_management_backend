@@ -113,14 +113,14 @@ const getChartData = async(req,res) =>{
     const data = await ProjectModel.aggregate([
       {
         $group: {
-          _id: '$department', // Group by department
+          _id: '$department', 
           totalProjects: { $sum: 1 }, // Count total projects
           closedProjects: { 
             $sum: { $cond: [{ $eq: ['$status', 'Close'] }, 1, 0] }, // Count closed projects
           },
         },
       },
-    ]);
+    ]);    
 
     // Initialize response structure
     const categories = [];
